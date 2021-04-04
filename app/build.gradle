@@ -4,7 +4,8 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+//    changed this from buildToolsVersion "30.0.3"
+    buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "com.zubisoft.noterecorder"
@@ -36,4 +37,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+//    Gif loader dependency
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
 }
