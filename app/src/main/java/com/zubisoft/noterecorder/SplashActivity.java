@@ -14,7 +14,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
 //        Timer for splash
-        CountDownTimer timer = new CountDownTimer(500,30) {
+        CountDownTimer timer = new CountDownTimer(600,30) {
             @Override
             public void onTick(long l) {
 

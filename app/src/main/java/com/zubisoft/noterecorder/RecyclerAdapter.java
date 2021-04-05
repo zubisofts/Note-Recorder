@@ -55,8 +55,7 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.ListI
             ArrayList<Notes> notes = new ArrayList<>();
             notes.add(new Notes("web Development"));
             notes.add(new Notes("web Development"));
-            notes.add(new Notes("web Development"));
-            notes.add(new Notes("web Development"));
+
             return notes;
         }
     }

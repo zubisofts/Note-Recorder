@@ -1,56 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
-    <com.google.android.material.appbar.AppBarLayout
+    tools:context=".HomeActivity"
+    android:id="@+id/drawer">
+
+
+    <include layout="@layout/home_content"/>
+
+    <com.google.android.material.navigation.NavigationView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/red"
-            app:title="Home"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:id="@+id/navigationView"/>
 
-    </com.google.android.material.appbar.AppBarLayout>
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/red"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"/>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-   android:orientation="vertical"
-    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-    >
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:src="@drawable/listen"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Recent Notes"
-        android:fontFamily="@font/baloo"
-        android:textSize="20dp"
-        android:layout_margin="8dp"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/recycler_layout"
-        android:id="@+id/recentRecycler"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-</LinearLayout>
-
-
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
