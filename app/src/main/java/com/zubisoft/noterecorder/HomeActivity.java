@@ -33,6 +33,8 @@ import cafe.adriel.androidaudiorecorder.model.AudioSource;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private String filePath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,8 +98,8 @@ public class HomeActivity extends AppCompatActivity {
                                     file.mkdir();
                                 }
                                 long timestamp=new Date().getTime();
-                                String filePath = file.getPath() + "/record_it_"+timestamp+".wav";
-                                int color = getResources().getColor(R.color.purple_200);
+                                filePath = file.getPath() + "/record_it_"+timestamp+".wav";
+                                int color = getResources().getColor(R.color.red);
                                 int requestCode = 1002;
                                 AndroidAudioRecorder.with(HomeActivity.this)
                                         // Required
@@ -138,6 +140,13 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Note record saved successfully", Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
                 // Oops! User has canceled the recording
+                File file=new File(filePath);
+                if (file.exists()){
+                    boolean deleted=file.delete();
+                    if (deleted){
+                        Toast.makeText(this, "Note record was canceled", Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         }
     }
