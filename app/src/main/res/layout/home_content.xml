@@ -18,9 +18,11 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
 
     </com.google.android.material.appbar.AppBarLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/btnNewNote"
         app:backgroundTint="@color/red"
         app:tint="@android:color/white"
         android:layout_gravity="bottom|end"
