@@ -31,20 +31,11 @@ public abstract class NoteDatabase extends RoomDatabase {
                             NoteDatabase.class,
                             "note_database")
                             .fallbackToDestructiveMigration()
-                            .addCallback(roomCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
-    private static Callback roomCallback=new Callback(){
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-//            new PopulateNewsAsyncTask(instance).execute();
-        }
-    };
 
 }
