@@ -13,13 +13,14 @@ import com.zubisoft.noterecorder.repository.DatabaseRepository;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Note.class, Category.class}, version = 1)
+@Database(entities = {Note.class, Category.class, UserData.class}, version = 1)
 public abstract class NoteDatabase extends RoomDatabase {
 
     private static volatile NoteDatabase INSTANCE;
 
     public abstract CategoryDao categoryDao();
     public abstract NoteDao noteDao();
+    public abstract UserDataDao userDataDao();
 
     public static NoteDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
