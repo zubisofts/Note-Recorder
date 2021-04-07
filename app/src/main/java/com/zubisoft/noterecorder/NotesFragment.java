@@ -1,5 +1,6 @@
 package com.zubisoft.noterecorder;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import com.zubisoft.noterecorder.data.Note;
 import com.zubisoft.noterecorder.viewmodels.NotesViewModel;
 import com.zubisoft.noterecorder.viewmodels.NotesViewModelFactory;
 
+import java.io.File;
 import java.util.List;
 
 
@@ -70,6 +72,30 @@ public class NotesFragment extends Fragment implements NoteListAdapter.NoteItemI
 
     @Override
     public void onReadPressed(Note note) {
+        Intent intent=new Intent(getContext(), NewTextNoteActivity.class);
+        intent.putExtra("text", note.getText());
+        intent.putExtra("id", note.getId());
+        intent.putExtra("title", note.getTitle());
+        intent.putExtra("catId", note.getCategoryId());
+        intent.putExtra("timestamp", note.getTimestamp());
+        intent.putExtra("for", "view");
+        startActivity(intent);
+    }
 
+    @Override
+    public void onDeleteNote(Note note) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("Do you want to delete this note?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    notesViewModel.deleteNote(note);
+                    if (note.getType().equals("Record")){
+                        boolean delete=new File(note.getFilePath()).delete();
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 }

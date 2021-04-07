@@ -1,10 +1,15 @@
 package com.zubisoft.noterecorder;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.exoplayer2.MediaItem;
@@ -19,6 +24,7 @@ public class RecordPlayerActivity extends AppCompatActivity {
 
     SimpleExoPlayer player;
     private StyledPlayerView playerView;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +45,7 @@ public class RecordPlayerActivity extends AppCompatActivity {
         String noteTitle=getIntent().getStringExtra("title");
         Objects.requireNonNull(getSupportActionBar()).setTitle(noteTitle);
         String noteRecPath=getIntent().getStringExtra("recordPath");
-        File file=new File(noteRecPath);
+        file=new File(noteRecPath);
 
         // Build the media item.
         MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(file));
@@ -76,5 +82,29 @@ public class RecordPlayerActivity extends AppCompatActivity {
             player = null;
 
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_play_record, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId()==R.id.menu_share_record){
+            shareRecord();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void shareRecord() {
+        Uri fileUri=FileProvider.getUriForFile(this, "com.zubisoft.noterecorder.fileprovider",file);
+
+        Intent shareIntent=new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("audio/*");
+        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+        startActivity(Intent.createChooser(shareIntent, "Share this record"));
+
     }
 }

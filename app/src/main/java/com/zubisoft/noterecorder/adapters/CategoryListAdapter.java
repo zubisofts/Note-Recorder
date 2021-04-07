@@ -58,7 +58,7 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
 
     static class CategoryItemViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView txtCatTitle;
+        private final TextView txtCatTitle;
 
         public CategoryItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +68,6 @@ public class CategoryListAdapter extends RecyclerView.Adapter<CategoryListAdapte
     }
 
     public interface CategoryInteractionListener{
-        public void onCategoryClicked(Category category);
+        void onCategoryClicked(Category category);
     }
 }

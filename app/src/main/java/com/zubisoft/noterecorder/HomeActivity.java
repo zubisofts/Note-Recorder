@@ -174,11 +174,38 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         view.findViewById(R.id.btnText).setOnClickListener(v -> {
-//                takeNote();
+            makeTextNote();
             dialog.dismiss();
         });
 
 
+    }
+
+    private void makeTextNote() {
+        View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.category_selection_dialog_layout, null, false);
+        ListView listView=view.findViewById(R.id.catListView);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        categoryViewModel.getCategories().observe(this, categories -> {
+            if(!categories.isEmpty()){
+                ArrayList<String> cats=new ArrayList<>();
+                for(Category category:categories){
+                    cats.add(category.getTitle());
+                }
+                ArrayAdapter arrayAdapter=new ArrayAdapter(HomeActivity.this, android.R.layout.simple_selectable_list_item,cats);
+                listView.setAdapter(arrayAdapter);
+                listView.setOnItemClickListener((parent, view1, position, id) -> {
+                    Intent intent=new Intent(HomeActivity.this, NewTextNoteActivity.class);
+                    intent.putExtra("categoryId", categories.get(position).getId());
+                    startActivity(intent);
+
+                });
+            }
+
+        });
     }
 
     private void recordNote() {
