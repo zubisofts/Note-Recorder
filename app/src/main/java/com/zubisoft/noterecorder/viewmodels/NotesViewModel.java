@@ -25,6 +25,10 @@ public class NotesViewModel extends ViewModel {
         return notes;
     }
 
+    public LiveData<List<Note>> findNoteByCategory(String catId){
+        return notes;
+    }
+
     public void addNote(Note note){
         databaseRepository.addNote(note);
     }

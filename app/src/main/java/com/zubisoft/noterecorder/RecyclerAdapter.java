@@ -1,5 +1,6 @@
 package com.zubisoft.noterecorder;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,12 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.ListI
     @Override
     public void onBindViewHolder(@NonNull ListItemHolder holder, int position) {
         holder.noteTittle.setText(notesList.get(position).noteTittle);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                holder.itemView.getContext().startActivity(new Intent(holder.itemView.getContext(),CategoryNotes.class));
+            }
+        });
     }
 
     @Override
