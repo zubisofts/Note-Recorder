@@ -33,4 +33,11 @@ public class NotesViewModel extends ViewModel {
         databaseRepository.addNote(note);
     }
 
+    public void updateNote(Note note) {
+        databaseRepository.updateNote(note);
+    }
+
+    public void deleteNote(Note note) {
+        databaseRepository.deleteNote(note);
+    }
 }

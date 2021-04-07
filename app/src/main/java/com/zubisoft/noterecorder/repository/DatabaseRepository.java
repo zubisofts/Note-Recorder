@@ -72,4 +72,17 @@ public class DatabaseRepository {
     public LiveData<List<Note>> getAllNotes() {
         return mNoteDao.getAllNotes();
     }
+
+    public void updateNote(Note note) {
+        databaseWriteExecutor.execute(() -> {
+            mNoteDao.updateNote(note);
+        });
+    }
+
+    public void deleteNote(Note note) {
+        databaseWriteExecutor.execute(() -> {
+            mNoteDao.deleteNote(note);
+        });
+
+    }
 }

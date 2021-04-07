@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -40,13 +41,17 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteIt
 
             if (note.getType().equals("Record")) {
                 holder.btnRead.setVisibility(View.GONE);
+                holder.btnPlay.setVisibility(View.VISIBLE);
             } else {
                 holder.btnRead.setVisibility(View.VISIBLE);
+                holder.btnPlay.setVisibility(View.GONE);
             }
 
             holder.btnPlay.setOnClickListener(view -> noteItemInteractionListener.onPlayPressed(note));
 
             holder.btnRead.setOnClickListener(view -> noteItemInteractionListener.onReadPressed(note));
+
+            holder.btndelete.setOnClickListener(view->noteItemInteractionListener.onDeleteNote(note));
         }
     }
 
@@ -70,6 +75,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteIt
         private TextView txtNoteDate;
         private FrameLayout bgCategoryIndicator;
         private MaterialButton btnPlay, btnRead;
+        private ImageView btndelete;
 
         public NoteItemViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,12 +84,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteIt
             bgCategoryIndicator = itemView.findViewById(R.id.catIndicator);
             btnPlay = itemView.findViewById(R.id.btnPlay);
             btnRead = itemView.findViewById(R.id.btnRead);
+            btndelete=itemView.findViewById(R.id.btnDeleteNote);
         }
     }
 
     public interface NoteItemInteractionListener {
         void onPlayPressed(Note note);
-
         void onReadPressed(Note note);
+        void onDeleteNote(Note note);
     }
 }
