@@ -1,5 +1,6 @@
 package com.zubisoft.noterecorder;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -61,7 +62,10 @@ public class NotesFragment extends Fragment implements NoteListAdapter.NoteItemI
 
     @Override
     public void onPlayPressed(Note note) {
-
+        Intent intent=new Intent(getContext(), RecordPlayerActivity.class);
+        intent.putExtra("recordPath", note.getFilePath());
+        intent.putExtra("title", note.getTitle());
+        startActivity(intent);
     }
 
     @Override
