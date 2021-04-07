@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NoteRecorder">
+        <activity android:name=".CategoryNotes"></activity>
         <activity android:name=".NewTextNoteActivity"></activity>
         <activity android:name=".RecordPlayerActivity" />
         <activity android:name=".LoginActivity" />
