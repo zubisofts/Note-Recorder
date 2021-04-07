@@ -11,6 +11,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 
 import com.github.dhaval2404.colorpicker.MaterialColorPickerDialog;
 import com.github.dhaval2404.colorpicker.listener.ColorListener;
@@ -35,12 +40,16 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.zubisoft.noterecorder.data.Category;
+import com.zubisoft.noterecorder.data.Note;
 import com.zubisoft.noterecorder.viewmodels.CategoryViewModel;
 import com.zubisoft.noterecorder.viewmodels.CategoryViewModelFactory;
+import com.zubisoft.noterecorder.viewmodels.NotesViewModel;
+import com.zubisoft.noterecorder.viewmodels.NotesViewModelFactory;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,17 +61,22 @@ import cafe.adriel.androidaudiorecorder.model.AudioSource;
 public class HomeActivity extends AppCompatActivity {
 
     private String filePath;
+    private int selectedCatId;
     private DrawerLayout drawerLayout;
     private int chosenColor;
     private CategoryViewModel categoryViewModel;
+    private NotesViewModel notesViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        CategoryViewModelFactory categoryViewModelFactory=new CategoryViewModelFactory(getApplication());
-        categoryViewModel= categoryViewModelFactory.create(CategoryViewModel.class);
+        CategoryViewModelFactory categoryViewModelFactory = new CategoryViewModelFactory(getApplication());
+        categoryViewModel = categoryViewModelFactory.create(CategoryViewModel.class);
+
+        NotesViewModelFactory notesViewModelFactory = new NotesViewModelFactory(getApplication());
+        notesViewModel = notesViewModelFactory.create(NotesViewModel.class);
 
         drawerLayout = findViewById(R.id.drawer);
         NavigationView navigationView = findViewById(R.id.navigationView);
@@ -76,128 +90,150 @@ public class HomeActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new HomeFragment()).commit();
 
 //        On navigationClick
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        navigationView.setNavigationItemSelectedListener(item -> {
 
-                switch (item.getItemId()) {
-                    case R.id.home:
-                        switchFragment(new HomeFragment());
-                        findViewById(R.id.btn_add_category).setVisibility(View.GONE);
-                        findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
-                        break;
+            switch (item.getItemId()) {
+                case R.id.home:
+                    switchFragment(new HomeFragment());
+                    findViewById(R.id.btn_add_category).setVisibility(View.GONE);
+                    findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
+                    break;
 
-                    case R.id.favorite:
-                        switchFragment(new FavoritesFragment());
-                        findViewById(R.id.btn_add_category).setVisibility(View.GONE);
-                        findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
-                        break;
+                case R.id.favorite:
+                    switchFragment(new FavoritesFragment());
+                    findViewById(R.id.btn_add_category).setVisibility(View.GONE);
+                    findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
+                    break;
 
-                    case R.id.categories:
-                        switchFragment(new CategoryFragment());
-                        findViewById(R.id.btn_add_category).setVisibility(View.VISIBLE);
-                        findViewById(R.id.btnNewNote).setVisibility(View.GONE);
-                        break;
-                    case R.id.notes:
-                        switchFragment(new NotesFragment());
-                        findViewById(R.id.btn_add_category).setVisibility(View.GONE);
-                        findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
-                        break;
+                case R.id.categories:
+                    switchFragment(new CategoryFragment());
+                    findViewById(R.id.btn_add_category).setVisibility(View.VISIBLE);
+                    findViewById(R.id.btnNewNote).setVisibility(View.GONE);
+                    break;
+                case R.id.notes:
+                    switchFragment(new NotesFragment());
+                    findViewById(R.id.btn_add_category).setVisibility(View.GONE);
+                    findViewById(R.id.btnNewNote).setVisibility(View.VISIBLE);
+                    break;
 
-                }
-                return true;
             }
+            return true;
         });
 
         findViewById(R.id.btnNewNote).setOnClickListener(v -> {
-
-            Dexter.withContext(HomeActivity.this)
-                    .withPermissions(Manifest.permission.RECORD_AUDIO
-                            , Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .withListener(new MultiplePermissionsListener() {
-                        @Override
-                        public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                            if (multiplePermissionsReport.areAllPermissionsGranted()) {
-                                File file=new File(Environment.getExternalStorageDirectory()+"/RecordIt");
-                                if(!file.exists()){
-                                    file.mkdir();
-                                }
-                                long timestamp=new Date().getTime();
-                                filePath = file.getPath() + "/record_it_"+timestamp+".wav";
-                                int color = getResources().getColor(R.color.red);
-                                int requestCode = 1002;
-                                AndroidAudioRecorder.with(HomeActivity.this)
-                                        // Required
-                                        .setFilePath(filePath)
-                                        .setColor(color)
-                                        .setRequestCode(requestCode)
-
-                                        // Optional
-                                        .setSource(AudioSource.MIC)
-                                        .setChannel(AudioChannel.STEREO)
-                                        .setSampleRate(AudioSampleRate.HZ_48000)
-                                        .setAutoStart(false)
-                                        .setKeepDisplayOn(true)
-
-                                        // Start recording
-                                        .record();
-                            }
-                        }
-
-                        @Override
-                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-
-                        }
-                    })
-                    .onSameThread()
-                    .check();
+            makeNote();
         });
 
-        findViewById(R.id.btn_add_category).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chosenColor=R.color.red;
-                View view= LayoutInflater.from(HomeActivity.this).inflate(R.layout.new_category_layout, null,false);
-                TextInputEditText editText=view.findViewById(R.id.edt_cat_title);
-                MaterialCardView btnColor=view.findViewById(R.id.btnChooseColor);
-                btnColor.setOnClickListener(v1 -> new MaterialColorPickerDialog
-                        .Builder(HomeActivity.this)
-                        .setTitle("Pick Category Color")
-                        .setColorShape(ColorShape.SQAURE)
-                        .setColorSwatch(ColorSwatch._300)
-                        .setDefaultColor(R.color.red)
-                        .setColorListener((color, colorHex) -> {
-                            chosenColor=Color.parseColor(colorHex);
-                            btnColor.setCardBackgroundColor(chosenColor);
-                        })
-                        .show());
-                new AlertDialog.Builder(HomeActivity.this)
-                        .setView(view)
-                        .setPositiveButton("Save Now", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if(editText.getText().toString().isEmpty()){
-                                    Toast.makeText(HomeActivity.this, "Category title must not be empty", Toast.LENGTH_SHORT).show();
-                                }else {
-                                    Category category = new Category(editText.getText().toString(), chosenColor, new Date().getTime());
-                                    categoryViewModel.addCategory(category);
-                                    dialog.dismiss();
-                                }
-                            }
-                        })
-                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+        findViewById(R.id.btn_add_category).setOnClickListener(v -> {
+            chosenColor = R.color.red;
+            View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.new_category_layout, null, false);
+            TextInputEditText editText = view.findViewById(R.id.edt_cat_title);
+            MaterialCardView btnColor = view.findViewById(R.id.btnChooseColor);
+            btnColor.setOnClickListener(v1 -> new MaterialColorPickerDialog
+                    .Builder(HomeActivity.this)
+                    .setTitle("Pick Category Color")
+                    .setColorShape(ColorShape.SQAURE)
+                    .setColorSwatch(ColorSwatch._300)
+                    .setDefaultColor(R.color.red)
+                    .setColorListener((color, colorHex) -> {
+                        chosenColor = Color.parseColor(colorHex);
+                        btnColor.setCardBackgroundColor(chosenColor);
+                    })
+                    .show());
+            new AlertDialog.Builder(HomeActivity.this)
+                    .setView(view)
+                    .setPositiveButton("Save Now", (dialog, which) -> {
+                        if (editText.getText().toString().isEmpty()) {
+                            Toast.makeText(HomeActivity.this, "Category title must not be empty", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Category category = new Category(editText.getText().toString(), chosenColor, new Date().getTime());
+                            categoryViewModel.addCategory(category);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton("Cancel", (dialog, which) -> {
 
-                            }
-                        })
-                        .create().show();
-            }
+                    })
+                    .create().show();
         });
 
     }
 
-    private void switchFragment(Fragment fragment){
+    private void makeNote() {
+
+        View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.note_type_selection_dialog_layout, null, false);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        view.findViewById(R.id.btnRecord).setOnClickListener(v -> {
+            recordNote();
+            dialog.dismiss();
+        });
+
+        view.findViewById(R.id.btnText).setOnClickListener(v -> {
+//                takeNote();
+            dialog.dismiss();
+        });
+
+
+    }
+
+    private void recordNote() {
+
+        View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.category_selection_dialog_layout, null, false);
+        ListView listView=view.findViewById(R.id.catListView);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setView(view);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        categoryViewModel.getCategories().observe(this, categories -> {
+            if(!categories.isEmpty()){
+                ArrayList<String> cats=new ArrayList<>();
+                for(Category category:categories){
+                    cats.add(category.getTitle());
+                }
+                ArrayAdapter arrayAdapter=new ArrayAdapter(HomeActivity.this, android.R.layout.simple_selectable_list_item,cats);
+                listView.setAdapter(arrayAdapter);
+                listView.setOnItemClickListener((parent, view1, position, id) -> {
+                    File file = new File(Environment.getExternalStorageDirectory() + "/RecordIt");
+                    if (!file.exists()) {
+                        file.mkdir();
+                    }
+                    long timestamp = new Date().getTime();
+                    filePath = file.getPath() + "/record_it_" + timestamp + ".wav";
+                    selectedCatId=categories.get(position).getId();
+                    int color = categories.get(position).getColor();
+                    int requestCode = 1002;
+                    AndroidAudioRecorder.with(HomeActivity.this)
+                            // Required
+                            .setFilePath(filePath)
+                            .setColor(color)
+                            .setRequestCode(requestCode)
+                            // Optional
+                            .setSource(AudioSource.MIC)
+                            .setChannel(AudioChannel.STEREO)
+                            .setSampleRate(AudioSampleRate.HZ_8000)
+                            .setAutoStart(false)
+                            .setKeepDisplayOn(true)
+
+                            // Start recording
+                            .record();
+                    dialog.dismiss();
+                });
+            }
+
+        });
+
+
+
+
+    }
+
+    private void switchFragment(Fragment fragment) {
         getSupportFragmentManager().
                 beginTransaction()
                 .replace(R.id.container, fragment).commit();
@@ -211,17 +247,57 @@ public class HomeActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Great! User has recorded and saved the audio file
 //                String path=data.getData().toString();
-                Toast.makeText(this, "Note record saved successfully", Toast.LENGTH_SHORT).show();
+                saveNote();
             } else if (resultCode == RESULT_CANCELED) {
                 // Oops! User has canceled the recording
-                File file=new File(filePath);
-                if (file.exists()){
-                    boolean deleted=file.delete();
-                    if (deleted){
+                File file = new File(filePath);
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    if (deleted) {
                         Toast.makeText(this, "Note record was canceled", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         }
+    }
+
+    private void saveNote() {
+
+        View view = LayoutInflater.from(HomeActivity.this).inflate(R.layout.note_save_name_layout, null, false);
+        TextInputEditText edtTitle=view.findViewById(R.id.edtNoteTitle);
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setView(view);
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            if(edtTitle.getText().toString().isEmpty()){
+                Toast.makeText(HomeActivity.this, "You must enter a title for your notes", Toast.LENGTH_SHORT).show();
+            }else{
+                Note note=new Note(
+                        selectedCatId,
+                        edtTitle.getText().toString(),
+                        filePath,
+                        "",
+                        "Record",
+                        new Date().getTime()
+                );
+                notesViewModel.addNote(note);
+                dialog.dismiss();
+                Toast.makeText(HomeActivity.this, "Note record saved successfully", Toast.LENGTH_SHORT).show();
+
+            }
+        })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    File file = new File(filePath);
+                    if (file.exists()) {
+                        boolean deleted = file.delete();
+                        if (deleted) {
+                            Toast.makeText(HomeActivity.this, "Note record was canceled", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    dialog.dismiss();
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
     }
 }
