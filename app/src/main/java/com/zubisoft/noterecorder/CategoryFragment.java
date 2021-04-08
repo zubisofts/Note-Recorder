@@ -1,5 +1,6 @@
 package com.zubisoft.noterecorder;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -61,6 +62,8 @@ public class CategoryFragment extends Fragment implements CategoryListAdapter.Ca
 
     @Override
     public void onCategoryClicked(Category category) {
-
+        Intent intent=new Intent(getContext(), CategoryNotes.class);
+        intent.putExtra("categoryId", category.getId());
+        startActivity(intent);
     }
 }

@@ -85,4 +85,8 @@ public class DatabaseRepository {
         });
 
     }
+
+    public LiveData<List<Note>> findNotesByCategory(int catId) {
+        return mNoteDao.findNotesByCategory(catId);
+    }
 }
