@@ -29,12 +29,16 @@ public class DatabaseRepository {
         mUserDataDao = db.userDataDao();
         mNoteDao=db.noteDao();
         mAllCategories = mCategoryDao.getAllCategories();
+        mSomeCategories = mCategoryDao.getSomeCategories();
+        recentNotes = mNoteDao.getRecentNotes();
     }
 
     private final CategoryDao mCategoryDao;
     private final NoteDao mNoteDao;
     private final UserDataDao mUserDataDao;
     private final LiveData<List<Category>> mAllCategories;
+    private final LiveData<List<Category>> mSomeCategories;
+    private final LiveData<List<Note>> recentNotes;
 
     // Note that in order to unit test the DatabaseRepository, you have to remove the Application
     // dependency. This adds complexity and much more code, and this sample is not about testing.
@@ -43,6 +47,12 @@ public class DatabaseRepository {
 
     public LiveData<List<Category>> getAllCategories() {
         return mAllCategories;
+    }
+    public LiveData<List<Category>> getSomeCategories() {
+        return mSomeCategories;
+    }
+    public LiveData<List<Note>> getRecentNotes() {
+        return recentNotes;
     }
 
     // You must call this on a non-UI thread or your app will throw an exception. Room ensures
