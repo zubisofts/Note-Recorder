@@ -1,5 +1,7 @@
 package com.zubisoft.noterecorder;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -21,10 +23,11 @@ import com.zubisoft.noterecorder.viewmodels.CategoryViewModelFactory;
 import com.zubisoft.noterecorder.viewmodels.NotesViewModel;
 import com.zubisoft.noterecorder.viewmodels.NotesViewModelFactory;
 
+import java.io.File;
 import java.util.List;
 
 
-public class HomeFragment extends Fragment implements CategoryListAdapter.CategoryInteractionListener {
+public class HomeFragment extends Fragment implements CategoryListAdapter.CategoryInteractionListener, NoteListAdapter.NoteItemInteractionListener {
 
 
     public HomeFragment() {
@@ -73,6 +76,7 @@ public class HomeFragment extends Fragment implements CategoryListAdapter.Catego
 
         RecyclerView recentList = view.findViewById(R.id.recentRecycler);
         NoteListAdapter noteListAdapter = new NoteListAdapter();
+        noteListAdapter.setNoteItemInteractionListener(this);
         recentList.setAdapter(noteListAdapter);
 
         notesViewModel.getRecentNotes().observe(getViewLifecycleOwner(), new Observer<List<Note>>() {
@@ -119,6 +123,45 @@ public class HomeFragment extends Fragment implements CategoryListAdapter.Catego
 
     @Override
     public void onCategoryClicked(Category category) {
+        Intent intent=new Intent(getContext(), CategoryNotes.class);
+        intent.putExtra("categoryId", category.getId());
+        startActivity(intent);
+    }
 
+    @Override
+    public void onPlayPressed(Note note) {
+        Intent intent=new Intent(getContext(), RecordPlayerActivity.class);
+        intent.putExtra("recordPath", note.getFilePath());
+        intent.putExtra("title", note.getTitle());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onReadPressed(Note note) {
+        Intent intent=new Intent(getContext(), NewTextNoteActivity.class);
+        intent.putExtra("text", note.getText());
+        intent.putExtra("id", note.getId());
+        intent.putExtra("title", note.getTitle());
+        intent.putExtra("catId", note.getCategoryId());
+        intent.putExtra("timestamp", note.getTimestamp());
+        intent.putExtra("for", "view");
+        startActivity(intent);
+    }
+
+    @Override
+    public void onDeleteNote(Note note) {
+        new AlertDialog.Builder(getActivity())
+                .setMessage("Do you want to delete this note?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    notesViewModel.deleteNote(note);
+                    if (note.getType().equals("Record")){
+                        boolean delete=new File(note.getFilePath()).delete();
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 }
