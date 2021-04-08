@@ -38,12 +38,28 @@
                 android:fontFamily="@font/baloo"
                 android:textSize="16dp"
                 android:layout_margin="8dp"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/recentRecycler"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/recentRecycler"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:id="@+id/noRecent"
+                        android:visibility="gone">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="No Recent Notes"/>
+                    </FrameLayout>
+                </FrameLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -52,85 +68,57 @@
                 android:fontFamily="@font/baloo"
                 android:textColor="@color/red"
                 android:layout_gravity="end"
-                android:layout_margin="10dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categories"
-                android:fontFamily="@font/baloo"
-                android:textSize="16dp"
-                android:layout_marginLeft="10dp"/>
+                android:layout_margin="10dp"
+                android:id="@+id/txt_moreNotes"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_margin="8dp">
-                <com.google.android.material.card.MaterialCardView
+                android:weightSum="2">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Categories"
+                android:fontFamily="@font/baloo"
+                android:textSize="16dp"
+                android:layout_marginLeft="10dp"/>
+                <TextView
                     android:layout_width="0dp"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    app:cardElevation="8dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:src="@drawable/clas"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Class Notes"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/baloo"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="70dp"
-                    android:layout_weight="1"
-                    android:layout_margin="5dp"
-                    app:cardElevation="8dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:src="@drawable/meet"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Meetings"
-                            android:layout_gravity="center"
-                            android:fontFamily="@font/baloo"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="0dp"
-                    android:layout_height="70dp"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    app:cardElevation="8dp">
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_gravity="center">
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:src="@drawable/ic_red_add"
-                            />
-
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
+                    android:text="more categories"
+                    android:fontFamily="@font/baloo"
+                    android:textSize="16dp"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/red"
+                    android:id="@+id/txt_moreCat"
+                    android:layout_marginRight="10dp"/>
             </LinearLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+               app:spanCount="3"
+                android:id="@+id/catRecycler"/>
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:id="@+id/noCatigory"
+                    android:visibility="gone"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="No Categories Added"
+                        android:textColor="@color/black"/>
+                </FrameLayout>
+
+            </FrameLayout>
         </LinearLayout>
 
     </ScrollView>

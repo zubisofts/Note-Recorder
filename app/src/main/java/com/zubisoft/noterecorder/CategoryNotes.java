@@ -30,11 +30,11 @@ public class CategoryNotes extends AppCompatActivity {
 
         int cartId=getIntent().getIntExtra("categoryId",-'1');
 
-        notesViewModel.findNoteByCategory(catId).observe(this, new Observer<List<Note>>() {
-            @Override
-            public void onChanged(List<Note> notes) {
-                adapter.setNoteList(notes);
-            }
-        });
+//        notesViewModel.findNoteByCategory(catId).observe(this, new Observer<List<Note>>() {
+//            @Override
+//            public void onChanged(List<Note> notes) {
+//                adapter.setNoteList(notes);
+//            }
+//        });
     }
 }
