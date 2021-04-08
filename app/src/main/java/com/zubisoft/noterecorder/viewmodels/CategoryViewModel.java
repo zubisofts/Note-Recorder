@@ -15,13 +15,18 @@ public class CategoryViewModel extends ViewModel {
 
     DatabaseRepository databaseRepository;
     private  LiveData<List<Category>> categories;
+    private  LiveData<List<Category>> someCategories;
     public CategoryViewModel(Application application) {
         databaseRepository=new DatabaseRepository(application);
         categories=databaseRepository.getAllCategories();
+        someCategories = databaseRepository.getSomeCategories();
     }
 
     public LiveData<List<Category>> getCategories(){
         return categories;
+    }
+    public LiveData<List<Category>> getSomeCategories(){
+        return someCategories;
     }
 
     public void addCategory(Category category){

@@ -20,6 +20,8 @@ public interface NoteDao {
 
     @Query("SELECT * FROM Note")
     LiveData<List<Note>> getAllNotes();
+    @Query("SELECT * FROM Note ORDER BY id DESC LIMIT 3")
+    LiveData<List<Note>> getRecentNotes();
 
     @Query("SELECT * FROM Note WHERE category_id IN(:categoryId)")
     LiveData<List<Note>> findNotesByCategory(int categoryId);
