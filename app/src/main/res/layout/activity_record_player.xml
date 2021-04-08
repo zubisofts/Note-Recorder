@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecordPlayerActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/toolbar"
+            android:background="@color/red"
+            app:navigationIcon="@drawable/ic_close"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:keepScreenOn="true">
+
+        <com.google.android.exoplayer2.ui.StyledPlayerView
+            android:id="@+id/player_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black"
+            app:show_shuffle_button="true"
+            app:show_subtitle_button="true"
+            app:auto_show="true"
+            app:played_color="@color/red"
+            app:default_artwork="@drawable/ic_mic"
+            app:shutter_background_color="@color/red_100"
+            />
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="#88000000"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <LinearLayout android:id="@+id/controls_root"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:visibility="gone">-->
+
+<!--                <Button android:id="@+id/select_tracks_button"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Tracke Selection title"-->
+<!--                    android:enabled="false"/>-->
+
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -18,13 +18,13 @@ public class Category{
 
     @ColumnInfo(name = "color")
     @NonNull
-    private String color;
+    private int color;
 
     @ColumnInfo(name = "timestamp")
     @NonNull
     private long timestamp;
 
-    public Category(@NonNull String title, @NonNull String color, long timestamp) {
+    public Category(@NonNull String title, @NonNull int color, long timestamp) {
         this.title = title;
         this.color = color;
         this.timestamp = timestamp;
@@ -48,11 +48,11 @@ public class Category{
     }
 
     @NonNull
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(@NonNull String color) {
+    public void setColor(@NonNull int color) {
         this.color = color;
     }
 

@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 
 import com.zubisoft.noterecorder.data.Category;
 import com.zubisoft.noterecorder.data.CategoryDao;
+import com.zubisoft.noterecorder.data.Note;
+import com.zubisoft.noterecorder.data.NoteDao;
 import com.zubisoft.noterecorder.data.NoteDatabase;
 import com.zubisoft.noterecorder.data.UserData;
 import com.zubisoft.noterecorder.data.UserDataDao;
@@ -25,10 +27,12 @@ public class DatabaseRepository {
 
         mCategoryDao = db.categoryDao();
         mUserDataDao = db.userDataDao();
+        mNoteDao=db.noteDao();
         mAllCategories = mCategoryDao.getAllCategories();
     }
 
     private final CategoryDao mCategoryDao;
+    private final NoteDao mNoteDao;
     private final UserDataDao mUserDataDao;
     private final LiveData<List<Category>> mAllCategories;
 
@@ -57,5 +61,28 @@ public class DatabaseRepository {
         databaseWriteExecutor.execute(() -> {
             mUserDataDao.insertUserData(userData);
         });
+    }
+
+    public void addNote(Note note) {
+        databaseWriteExecutor.execute(() -> {
+            mNoteDao.insertNote(note);
+        });
+    }
+
+    public LiveData<List<Note>> getAllNotes() {
+        return mNoteDao.getAllNotes();
+    }
+
+    public void updateNote(Note note) {
+        databaseWriteExecutor.execute(() -> {
+            mNoteDao.updateNote(note);
+        });
+    }
+
+    public void deleteNote(Note note) {
+        databaseWriteExecutor.execute(() -> {
+            mNoteDao.deleteNote(note);
+        });
+
     }
 }
